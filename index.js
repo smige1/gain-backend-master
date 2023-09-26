@@ -4,6 +4,7 @@ const dbConnect = require("./config/dbConnect");
 const { notFound, errorHandler } = require("./middlewares/errorHandler");
 const app = express();
 const dotenv = require("dotenv").config();
+const path = require('path');
 const PORT = 5000;
 const authRouter = require("./routes/authRoute");
 const productRouter = require("./routes/productRoute");
@@ -37,6 +38,12 @@ app.use("/api/coupon", couponRouter);
 app.use("/api/color", colorRouter);
 app.use("/api/enquiry", enqRouter);
 // app.use("/api/upload", uploadRouter);
+
+app.use(express.static('storages'));
+app.use(express.static(path.join(__dirname,'./public')));
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/public/images/product');
+});
 
 app.use(notFound);
 app.use(errorHandler);

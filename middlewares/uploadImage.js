@@ -49,7 +49,7 @@ const blogImgResize = async (req, res, next) => {
     req.files.map(async (file) => {
       await sharp(file.path)
         .resize(300, 300)
-        .toFormat("jpeg, png, jpg, ...order")
+        .toFormat("jpeg")
         .jpeg({ quality: 90 })
         .toFile(`public/images/blogs/${file.filename}`);
       fs.unlinkSync(`public/images/blogs/${file.filename}`);

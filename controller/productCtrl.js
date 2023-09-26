@@ -189,6 +189,9 @@ const rating = asyncHandler(async (req, res) => {
 });
 
 const uploadImages = asyncHandler(async (req, res) => {
+  const {id} =req.params;
+  validateMongoDbId(id)
+  console.log(id)
   try {
     const uploader = (path) => cloudinaryUploadImg(path, "images");
     const urls = [];
@@ -198,14 +201,24 @@ const uploadImages = asyncHandler(async (req, res) => {
       const newpath = await uploader(path);
       console.log(newpath);
       urls.push(newpath);
+      console.log(file)
       fs.unlinkSync(path);
     }
-    const images = urls.map((file) => {
-      return file;
-    });
-    res.json(images);
+    const findProduct = await Product.findByIdAndUpdate(
+      id,
+      {
+
+      images: urls.map((file) => {
+        return file;
+    }),
+  },
+  {
+    new: true
+  }
+    );
+    res.json(findProduct);
   } catch (error) {
-    throw new Error(error);
+    throw new Error("Not uploaded");
   }
 })
 
